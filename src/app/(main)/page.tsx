@@ -1,8 +1,9 @@
 import React from 'react';
 import Table from '@/components/table';
+import { url } from '@/utils/url';
 
 async function getUserData() {
-	const response = await fetch('http://localhost:4000/findUsers?limit=2', {
+	const response = await fetch(`${url}/findUsers?limit=2`, {
 		cache: 'no-store',
 	});
 
