@@ -2,10 +2,12 @@
 import React, { ChangeEvent, useState } from 'react';
 import debounce from 'lodash/debounce';
 import { IUser } from '@/types';
-import DialogDemo from './dialog';
-import AlertDialogDemo from './alert';
+import DialogEditUser from './dialogEditUser';
+import AlertDeleteUser from './alertDeleteUser';
+import DialogAddUser from './dialogAddUser';
 import Magnifier from '/public/magnifier.svg';
 import { api } from '@/services/api';
+import Pagination from './pagination';
 
 export default function Table({ users }: { users: IUser }) {
 	const [usersNewArray, setUsersNewArray] = useState(users);
@@ -13,39 +15,6 @@ export default function Table({ users }: { users: IUser }) {
 
 	const updateTable = async () => {
 		const response = await api.get(`/findUsers?page=${currentPage}`);
-		setUsersNewArray(response.data);
-	};
-
-	const nextPage = async () => {
-		if (currentPage >= usersNewArray.payload.totalPages) return;
-		const response = await api.get(`/findUsers?page=${currentPage + 1}`);
-		setUsersNewArray(response.data);
-		setCurrentPage(currentPage + 1);
-	};
-
-	const previewPage = async () => {
-		if (currentPage <= 1) return;
-		const response = await api.get(`/findUsers?page=${currentPage - 1}`);
-		setUsersNewArray(response.data);
-		setCurrentPage(currentPage - 1);
-	};
-
-	const deleteUser = async (id: number) => {
-		await api.delete(`/deleteUser/${id}`);
-		updateTable();
-	};
-
-	const updateUser = async (id: number, name: string, email: string) => {
-		await api.put(`/updateUser/${id}`, {
-			name,
-			email,
-		});
-		updateTable();
-	};
-
-	const handlePageChange = async (page: number) => {
-		const response = await api.get(`/findUsers?page=${page}`);
-		setCurrentPage(page);
 		setUsersNewArray(response.data);
 	};
 
@@ -60,15 +29,18 @@ export default function Table({ users }: { users: IUser }) {
 
 	return (
 		<main className='flex h-screen bg-container'>
-			<div className='m-auto flex w-5/6 flex-col justify-center rounded-lg bg-stone-50 p-6 shadow'>
-				<div className='mb-3 flex w-full items-center rounded-lg border border-solid border-gray-400 bg-stone-50 p-1 md:w-1/6'>
-					<Magnifier className='mr-3' />
-					<input
-						className='w-full bg-stone-50 font-body_1 text-body_1'
-						placeholder='Pesquisar por'
-						onChange={loadUsers}
-					/>
-				</div>
+			<div className='m-auto flex w-5/6 flex-col justify-center rounded-lg bg-stone-50 p-5 shadow'>
+				<section className='mb-3 flex flex-col justify-between md:flex-row'>
+					<div className='flex w-full items-center rounded-lg border border-solid border-buttons bg-stone-50 p-1 md:w-1/6'>
+						<Magnifier className='mr-3' />
+						<input
+							className='w-full bg-stone-50 font-body_1 text-body_1'
+							placeholder='Pesquisar por'
+							onChange={loadUsers}
+						/>
+					</div>
+					<DialogAddUser updateTable={updateTable} />
+				</section>
 
 				<div>
 					<table className='w-full table-fixed text-left font-body_1 text-body_1'>
@@ -77,7 +49,7 @@ export default function Table({ users }: { users: IUser }) {
 								<th className='p-2 font-normal'>Nome</th>
 								<th className='p-2 font-normal'>Email</th>
 								<th className='w-2/12 p-2 font-normal'>Editar</th>
-								<th className='w-2/12 p-2 font-normal'>Excluir</th>
+								<th className='w-3/12 p-2 font-normal'>Excluir</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -86,63 +58,35 @@ export default function Table({ users }: { users: IUser }) {
 									<td className='p-2'>{item.name}</td>
 									<td className='p-2'>{item.email}</td>
 									<td className='p-2'>
-										<DialogDemo
-											updateUser={updateUser}
+										<DialogEditUser
 											userId={item.id}
 											name={item.name}
 											email={item.email}
+											updateTable={updateTable}
 										/>
 									</td>
 									<td>
-										<AlertDialogDemo deleteUser={deleteUser} userId={item.id} />
+										<AlertDeleteUser
+											updateTable={updateTable}
+											userId={item.id}
+										/>
 									</td>
 								</tr>
 							))}
+							{usersNewArray?.payload?.users?.length < 5 &&
+								Array.from({
+									length: 5 - usersNewArray.payload.users.length,
+								}).map((_, index) => (
+									<tr key={`empty-row-${index}`} className='h-10'></tr>
+								))}
 						</tbody>
 					</table>
-					<nav>
-						<ul className='mt-4 flex justify-end'>
-							<li>
-								<div
-									onClick={() => previewPage()}
-									className='border border-solid border-buttons px-3 py-2'
-								>
-									Anterior
-								</div>
-							</li>
-							{Array.from(
-								{ length: usersNewArray?.payload?.totalPages },
-								(_, index) => {
-									const startPage = currentPage - 2;
-									const endPage = currentPage + 2;
-									if (index + 1 >= startPage && index + 1 <= endPage) {
-										return (
-											<div key={index}>
-												<button
-													onClick={() => handlePageChange(index + 1)}
-													className={`${
-														currentPage === index + 1
-															? 'bg-buttons text-white'
-															: 'bg-white text-gray-500'
-													} border-gray-buttons h-full border border-solid px-3 leading-tight`}
-												>
-													{index + 1}
-												</button>
-											</div>
-										);
-									}
-								}
-							)}
-							<li>
-								<div
-									onClick={() => nextPage()}
-									className='border border-solid border-buttons px-3 py-2'
-								>
-									Proximo
-								</div>
-							</li>
-						</ul>
-					</nav>
+					<Pagination
+						usersNewArray={usersNewArray}
+						setUsersNewArray={setUsersNewArray}
+						currentPage={currentPage}
+						setCurrentPage={setCurrentPage}
+					/>
 				</div>
 			</div>
 		</main>

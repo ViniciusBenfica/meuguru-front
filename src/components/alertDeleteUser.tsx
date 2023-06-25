@@ -1,14 +1,26 @@
 import React from 'react';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import Delete from '/public/delete.svg';
+import { api } from '@/services/api';
+import { toast } from 'react-toastify';
 
-const AlertDialogDemo = ({
-	deleteUser,
+const AlertDeleteUser = ({
+	updateTable,
 	userId,
 }: {
-	deleteUser: (id: number) => Promise<void>;
+	updateTable: () => Promise<void>;
 	userId: number;
 }) => {
+	const deleteUser = async (id: number) => {
+		try {
+			await api.delete(`/deleteUser/${id}`);
+			updateTable();
+			toast.success('Usuario deletado');
+		} catch (error) {
+			toast.error('Não foi possível deletar o usuario');
+		}
+	};
+
 	return (
 		<AlertDialog.Root>
 			<AlertDialog.Trigger asChild>
@@ -47,4 +59,4 @@ const AlertDialogDemo = ({
 	);
 };
 
-export default AlertDialogDemo;
+export default AlertDeleteUser;
