@@ -28,14 +28,14 @@ const AlertDialogDemo = ({
 					</AlertDialog.Description>
 					<div className='flex justify-end gap-[25px]'>
 						<AlertDialog.Cancel asChild>
-							<button className='inline-flex h-[35px] items-center justify-center rounded-[4px] px-[15px] font-medium leading-none outline-none'>
+							<button className='inline-flex h-[35px] items-center justify-center rounded-[4px] bg-stone-300 px-[15px] font-medium'>
 								Cancelar
 							</button>
 						</AlertDialog.Cancel>
 						<AlertDialog.Action asChild>
 							<button
 								onClick={() => deleteUser(userId)}
-								className='inline-flex h-[35px] items-center justify-center rounded-[4px] px-[15px] font-medium leading-none outline-none'
+								className=' inline-flex h-[35px] items-center justify-center rounded-[4px] bg-red-300 px-[15px] font-medium'
 							>
 								Excluir
 							</button>

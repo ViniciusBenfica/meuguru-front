@@ -13,9 +13,5 @@ async function getUserData() {
 export default async function Home() {
 	const users = await getUserData();
 
-	return (
-		<div>
-			<Table users={users} />
-		</div>
-	);
+	return <Table users={users} />;
 }

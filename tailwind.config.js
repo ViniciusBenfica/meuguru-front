@@ -21,6 +21,10 @@ module.exports = {
 			},
 			backgroundColor: {
 				container: '#F3F6F9',
+				buttons: '#180A29',
+			},
+			borderColor: {
+				buttons: '#180A29',
 			},
 		},
 	},

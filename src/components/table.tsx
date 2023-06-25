@@ -59,9 +59,9 @@ export default function Table({ users }: { users: IUser }) {
 	const loadUsers = debounce(findUsers, 1000);
 
 	return (
-		<div className='flex h-screen bg-container'>
+		<main className='flex h-screen bg-container'>
 			<div className='m-auto flex w-5/6 flex-col justify-center rounded-lg bg-stone-50 p-6 shadow'>
-				<div className='mb-3 flex w-1/6 items-center rounded-lg border border-solid border-gray-400 bg-stone-50 p-1'>
+				<div className='mb-3 flex w-full items-center rounded-lg border border-solid border-gray-400 bg-stone-50 p-1 md:w-1/6'>
 					<Magnifier className='mr-3' />
 					<input
 						className='w-full bg-stone-50 font-body_1 text-body_1'
@@ -69,14 +69,15 @@ export default function Table({ users }: { users: IUser }) {
 						onChange={loadUsers}
 					/>
 				</div>
+
 				<div>
 					<table className='w-full table-fixed text-left font-body_1 text-body_1'>
 						<thead>
 							<tr className='bg-stone-200'>
 								<th className='p-2 font-normal'>Nome</th>
 								<th className='p-2 font-normal'>Email</th>
-								<th className='p-2 font-normal'>Editar</th>
-								<th className='p-2 font-normal'>Excluir</th>
+								<th className='w-2/12 p-2 font-normal'>Editar</th>
+								<th className='w-2/12 p-2 font-normal'>Excluir</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -100,11 +101,11 @@ export default function Table({ users }: { users: IUser }) {
 						</tbody>
 					</table>
 					<nav>
-						<ul className='flex justify-end'>
+						<ul className='mt-4 flex justify-end'>
 							<li>
 								<div
 									onClick={() => previewPage()}
-									className='border border-solid border-gray-400 px-3 py-2'
+									className='border border-solid border-buttons px-3 py-2'
 								>
 									Anterior
 								</div>
@@ -121,9 +122,9 @@ export default function Table({ users }: { users: IUser }) {
 													onClick={() => handlePageChange(index + 1)}
 													className={`${
 														currentPage === index + 1
-															? 'bg-cyan-800 text-white'
+															? 'bg-buttons text-white'
 															: 'bg-white text-gray-500'
-													} h-full border border-solid border-gray-400 px-3 leading-tight`}
+													} border-gray-buttons h-full border border-solid px-3 leading-tight`}
 												>
 													{index + 1}
 												</button>
@@ -135,7 +136,7 @@ export default function Table({ users }: { users: IUser }) {
 							<li>
 								<div
 									onClick={() => nextPage()}
-									className='border border-solid border-gray-400 px-3 py-2'
+									className='border border-solid border-buttons px-3 py-2'
 								>
 									Proximo
 								</div>
@@ -144,6 +145,6 @@ export default function Table({ users }: { users: IUser }) {
 					</nav>
 				</div>
 			</div>
-		</div>
+		</main>
 	);
 }
