@@ -95,6 +95,7 @@ const DialogAddUser = ({
 								<input
 									className=' inline-flex h-[35px] w-full flex-1 items-center justify-center rounded-[4px] px-[10px] text-[15px]  shadow-[0_0_0_1px]  focus:shadow-[0_0_0_1px]'
 									id='password'
+									type='password'
 									{...register('password')}
 								/>
 								<p className='mt-1 text-xs text-red-500'>
